@@ -7,11 +7,12 @@
         {
             "type": "lldb-dap",
             "request": "launch",
-            "name": "Debug",
+            "name": "lldb",
             "program": "${workspaceRoot}/build/${fileBasenameNoExtension}",
             "args": [],
             "env": [],
-            "cwd": "${workspaceRoot}"
+            "cwd": "${workspaceRoot}",
+            "stopOnEntry": true
         }
     ]
 }

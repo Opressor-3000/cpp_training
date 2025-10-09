@@ -1,17 +1,8 @@
+[
 {
-    "configurations": [
-        {
-            "name": "Linux",
-            "includePath": [
-                "${workspaceFolder}/**"
-            ],
-            "defines": [],
-            "compilerPath": "/usr/bin/clangd",
-            "cStandard": "c17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "linux-gcc-x64",
-            "compileCommands": "${workspaceFolder}/build/compile_commands.json"
-        }
-    ],
-    "version": 4
+  "directory": "/home/aysa/cpp_test_project/build",
+  "command": "/usr/bin/clang++   -g -o CMakeFiles/cpp_test_project.dir/main.cpp.o -c /home/aysa/cpp_test_project/main.cpp",
+  "file": "/home/aysa/cpp_test_project/main.cpp",
+  "output": "CMakeFiles/cpp_test_project.dir/main.cpp.o"
 }
+]
