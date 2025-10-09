@@ -1,3 +1,22 @@
 
 compile_commands.json
 
+.idx
+
+*.idx
+
+*.json
+
+!build/launch.json
+
+!build/tasks.json
+
+!build/compile-commands.json
+
+*.make
+
+cpp_test_project.dir/
+
+.cmake/
+
+build/.cmake/api/v1/reply/index-2025-10-09T15-28-34-0108.json

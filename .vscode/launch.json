@@ -8,7 +8,7 @@
             "type": "lldb-dap",
             "request": "launch",
             "name": "lldb",
-            "program": "${workspaceRoot}/build/${fileBasenameNoExtension}",
+            "program": "${workspaceRoot}/build/cpp_test_project",
             "args": [],
             "env": [],
             "cwd": "${workspaceRoot}",

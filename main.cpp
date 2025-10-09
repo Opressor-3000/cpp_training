@@ -7,3 +7,4 @@ int main(void)
     std::cin >> str;
     std::cout << str << std::endl;
 }
+
