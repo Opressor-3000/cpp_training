@@ -9,7 +9,7 @@
                 "-g",
                 "${file}",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
+                "${fileDirname}/build/cpp_test_project"
             ],
             "options": {
                 "cwd": "${fileDirname}"

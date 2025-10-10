@@ -5,14 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "lldb-dap",
+            "type": "lldb",
             "request": "launch",
-            "name": "lldb",
-            "program": "${workspaceRoot}/build/cpp_test_project",
-            "args": [],
-            "env": [],
-            "cwd": "${workspaceRoot}",
-            "stopOnEntry": true
+            "name": "Custom launch",
+            "targetCreateCommands": [
+                "target create ${workspaceFolder}/build/cpp_test_project"
+            ],
+            "processCreateCommands": [
+                "settings set target.run-args value1 value2 value3",
+                "process launch"
+            ],
+            "stdio": ["in.txt", "out.txt"]
         }
     ]
 }

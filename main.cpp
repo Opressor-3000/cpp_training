@@ -1,10 +1,13 @@
-#include <iostream> // IWYU pragma: export
 #include <string>
+#include <iostream>
 
-int main(void)
+using std::string;
+
+
+int main(void) 
 {
-    std::string str;
-    std::cin >> str;
+    string str;
+    getline(std::cin, str);
     std::cout << str << std::endl;
+    return 0;
 }
-
