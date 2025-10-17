@@ -1,8 +1,8 @@
 [
 {
   "directory": "/home/aysa/cpp_test_project/build",
-  "command": "/usr/bin/clang++   -g -o CMakeFiles/cpp_test_project.dir/main.cpp.o -c /home/aysa/cpp_test_project/main.cpp",
-  "file": "/home/aysa/cpp_test_project/main.cpp",
-  "output": "CMakeFiles/cpp_test_project.dir/main.cpp.o"
+  "command": "/usr/bin/clang++   -g -o CMakeFiles/sum_from_str.dir/src/sum_from_str.cpp.o -c /home/aysa/cpp_test_project/src/sum_from_str.cpp",
+  "file": "/home/aysa/cpp_test_project/src/sum_from_str.cpp",
+  "output": "CMakeFiles/sum_from_str.dir/src/sum_from_str.cpp.o"
 }
 ]

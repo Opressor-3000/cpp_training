@@ -6,8 +6,14 @@ using std::string;
 
 int main(void) 
 {
-    string str;
+    string  str;
+
+    std::cout << str << std::endl;
     getline(std::cin, str);
+    if(str.empty()) {
+        std::cout << "faile";
+        abort(); 
+    }
     std::cout << str << std::endl;
     return 0;
 }

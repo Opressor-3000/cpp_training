@@ -69,28 +69,28 @@ include CMakeFiles/cpp_test_project.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/cpp_test_project.dir/flags.make
 
-CMakeFiles/cpp_test_project.dir/main.cpp.o: CMakeFiles/cpp_test_project.dir/flags.make
-CMakeFiles/cpp_test_project.dir/main.cpp.o: /home/aysa/cpp_test_project/main.cpp
-CMakeFiles/cpp_test_project.dir/main.cpp.o: CMakeFiles/cpp_test_project.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/aysa/cpp_test_project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/cpp_test_project.dir/main.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/cpp_test_project.dir/main.cpp.o -MF CMakeFiles/cpp_test_project.dir/main.cpp.o.d -o CMakeFiles/cpp_test_project.dir/main.cpp.o -c /home/aysa/cpp_test_project/main.cpp
+CMakeFiles/cpp_test_project.dir/src/sum_from_str.cpp.o: CMakeFiles/cpp_test_project.dir/flags.make
+CMakeFiles/cpp_test_project.dir/src/sum_from_str.cpp.o: /home/aysa/cpp_test_project/src/sum_from_str.cpp
+CMakeFiles/cpp_test_project.dir/src/sum_from_str.cpp.o: CMakeFiles/cpp_test_project.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/aysa/cpp_test_project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/cpp_test_project.dir/src/sum_from_str.cpp.o"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/cpp_test_project.dir/src/sum_from_str.cpp.o -MF CMakeFiles/cpp_test_project.dir/src/sum_from_str.cpp.o.d -o CMakeFiles/cpp_test_project.dir/src/sum_from_str.cpp.o -c /home/aysa/cpp_test_project/src/sum_from_str.cpp
 
-CMakeFiles/cpp_test_project.dir/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/cpp_test_project.dir/main.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/aysa/cpp_test_project/main.cpp > CMakeFiles/cpp_test_project.dir/main.cpp.i
+CMakeFiles/cpp_test_project.dir/src/sum_from_str.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/cpp_test_project.dir/src/sum_from_str.cpp.i"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/aysa/cpp_test_project/src/sum_from_str.cpp > CMakeFiles/cpp_test_project.dir/src/sum_from_str.cpp.i
 
-CMakeFiles/cpp_test_project.dir/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/cpp_test_project.dir/main.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/aysa/cpp_test_project/main.cpp -o CMakeFiles/cpp_test_project.dir/main.cpp.s
+CMakeFiles/cpp_test_project.dir/src/sum_from_str.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/cpp_test_project.dir/src/sum_from_str.cpp.s"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/aysa/cpp_test_project/src/sum_from_str.cpp -o CMakeFiles/cpp_test_project.dir/src/sum_from_str.cpp.s
 
 # Object files for target cpp_test_project
 cpp_test_project_OBJECTS = \
-"CMakeFiles/cpp_test_project.dir/main.cpp.o"
+"CMakeFiles/cpp_test_project.dir/src/sum_from_str.cpp.o"
 
 # External object files for target cpp_test_project
 cpp_test_project_EXTERNAL_OBJECTS =
 
-cpp_test_project: CMakeFiles/cpp_test_project.dir/main.cpp.o
+cpp_test_project: CMakeFiles/cpp_test_project.dir/src/sum_from_str.cpp.o
 cpp_test_project: CMakeFiles/cpp_test_project.dir/build.make
 cpp_test_project: CMakeFiles/cpp_test_project.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/aysa/cpp_test_project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable cpp_test_project"

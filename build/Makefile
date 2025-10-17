@@ -117,41 +117,41 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named cpp_test_project
+# Target rules for targets named sum_from_str
 
 # Build rule for target.
-cpp_test_project: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 cpp_test_project
-.PHONY : cpp_test_project
+sum_from_str: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 sum_from_str
+.PHONY : sum_from_str
 
 # fast build rule for target.
-cpp_test_project/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cpp_test_project.dir/build.make CMakeFiles/cpp_test_project.dir/build
-.PHONY : cpp_test_project/fast
+sum_from_str/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sum_from_str.dir/build.make CMakeFiles/sum_from_str.dir/build
+.PHONY : sum_from_str/fast
 
-main.o: main.cpp.o
-.PHONY : main.o
+src/sum_from_str.o: src/sum_from_str.cpp.o
+.PHONY : src/sum_from_str.o
 
 # target to build an object file
-main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cpp_test_project.dir/build.make CMakeFiles/cpp_test_project.dir/main.cpp.o
-.PHONY : main.cpp.o
+src/sum_from_str.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sum_from_str.dir/build.make CMakeFiles/sum_from_str.dir/src/sum_from_str.cpp.o
+.PHONY : src/sum_from_str.cpp.o
 
-main.i: main.cpp.i
-.PHONY : main.i
+src/sum_from_str.i: src/sum_from_str.cpp.i
+.PHONY : src/sum_from_str.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cpp_test_project.dir/build.make CMakeFiles/cpp_test_project.dir/main.cpp.i
-.PHONY : main.cpp.i
+src/sum_from_str.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sum_from_str.dir/build.make CMakeFiles/sum_from_str.dir/src/sum_from_str.cpp.i
+.PHONY : src/sum_from_str.cpp.i
 
-main.s: main.cpp.s
-.PHONY : main.s
+src/sum_from_str.s: src/sum_from_str.cpp.s
+.PHONY : src/sum_from_str.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cpp_test_project.dir/build.make CMakeFiles/cpp_test_project.dir/main.cpp.s
-.PHONY : main.cpp.s
+src/sum_from_str.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sum_from_str.dir/build.make CMakeFiles/sum_from_str.dir/src/sum_from_str.cpp.s
+.PHONY : src/sum_from_str.cpp.s
 
 # Help Target
 help:
@@ -161,10 +161,10 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... cpp_test_project"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... sum_from_str"
+	@echo "... src/sum_from_str.o"
+	@echo "... src/sum_from_str.i"
+	@echo "... src/sum_from_str.s"
 .PHONY : help
 
 

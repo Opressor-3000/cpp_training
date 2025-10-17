@@ -9,7 +9,7 @@
                 "-g",
                 "${file}",
                 "-o",
-                "${fileDirname}/build/cpp_test_project"
+                "${fileDirname}/build/sum_from_str"
             ],
             "options": {
                 "cwd": "${fileDirname}"

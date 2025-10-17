@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/aysa/cpp_test_project/main.cpp" "CMakeFiles/cpp_test_project.dir/main.cpp.o" "gcc" "CMakeFiles/cpp_test_project.dir/main.cpp.o.d"
+  "/home/aysa/cpp_test_project/src/sum_from_str.cpp" "CMakeFiles/cpp_test_project.dir/src/sum_from_str.cpp.o" "gcc" "CMakeFiles/cpp_test_project.dir/src/sum_from_str.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.
