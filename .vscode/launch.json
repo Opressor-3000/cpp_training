@@ -5,7 +5,7 @@
         "type": "lldb",
         "request": "launch",
         "name": "Launch",
-        "program": "${workspaceFolder}/build/sum_from_str",
+        "program": "${workspaceFolder}/build/ferz",
         "args": [],
         "cwd": "${workspaceFolder}"
     }

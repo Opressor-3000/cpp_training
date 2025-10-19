@@ -9,7 +9,7 @@
                 "-g",
                 "${file}",
                 "-o",
-                "${fileDirname}/build/sum_from_str"
+                "${fileDirname}/build/ferz"
             ],
             "options": {
                 "cwd": "${fileDirname}"

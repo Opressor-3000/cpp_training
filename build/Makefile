@@ -117,41 +117,41 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named sum_from_str
+# Target rules for targets named ferz
 
 # Build rule for target.
-sum_from_str: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 sum_from_str
-.PHONY : sum_from_str
+ferz: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ferz
+.PHONY : ferz
 
 # fast build rule for target.
-sum_from_str/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sum_from_str.dir/build.make CMakeFiles/sum_from_str.dir/build
-.PHONY : sum_from_str/fast
+ferz/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ferz.dir/build.make CMakeFiles/ferz.dir/build
+.PHONY : ferz/fast
 
-src/sum_from_str.o: src/sum_from_str.cpp.o
-.PHONY : src/sum_from_str.o
+src/ferz.o: src/ferz.cpp.o
+.PHONY : src/ferz.o
 
 # target to build an object file
-src/sum_from_str.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sum_from_str.dir/build.make CMakeFiles/sum_from_str.dir/src/sum_from_str.cpp.o
-.PHONY : src/sum_from_str.cpp.o
+src/ferz.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ferz.dir/build.make CMakeFiles/ferz.dir/src/ferz.cpp.o
+.PHONY : src/ferz.cpp.o
 
-src/sum_from_str.i: src/sum_from_str.cpp.i
-.PHONY : src/sum_from_str.i
+src/ferz.i: src/ferz.cpp.i
+.PHONY : src/ferz.i
 
 # target to preprocess a source file
-src/sum_from_str.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sum_from_str.dir/build.make CMakeFiles/sum_from_str.dir/src/sum_from_str.cpp.i
-.PHONY : src/sum_from_str.cpp.i
+src/ferz.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ferz.dir/build.make CMakeFiles/ferz.dir/src/ferz.cpp.i
+.PHONY : src/ferz.cpp.i
 
-src/sum_from_str.s: src/sum_from_str.cpp.s
-.PHONY : src/sum_from_str.s
+src/ferz.s: src/ferz.cpp.s
+.PHONY : src/ferz.s
 
 # target to generate assembly for a file
-src/sum_from_str.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sum_from_str.dir/build.make CMakeFiles/sum_from_str.dir/src/sum_from_str.cpp.s
-.PHONY : src/sum_from_str.cpp.s
+src/ferz.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ferz.dir/build.make CMakeFiles/ferz.dir/src/ferz.cpp.s
+.PHONY : src/ferz.cpp.s
 
 # Help Target
 help:
@@ -161,10 +161,10 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... sum_from_str"
-	@echo "... src/sum_from_str.o"
-	@echo "... src/sum_from_str.i"
-	@echo "... src/sum_from_str.s"
+	@echo "... ferz"
+	@echo "... src/ferz.o"
+	@echo "... src/ferz.i"
+	@echo "... src/ferz.s"
 .PHONY : help
 
 

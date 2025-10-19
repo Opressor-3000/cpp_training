@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.12)
 project(cpp_test_project VERSION 0.1 LANGUAGES CXX)
 
 
-add_executable(sum_from_str src/sum_from_str.cpp)
+add_executable(ferz src/ferz.cpp)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
