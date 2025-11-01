@@ -9,7 +9,7 @@
                 "-g",
                 "${file}",
                 "-o",
-                "${fileDirname}/build/ferz"
+                "${fileDirname}/bin/"
             ],
             "options": {
                 "cwd": "${fileDirname}"

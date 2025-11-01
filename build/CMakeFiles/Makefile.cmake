@@ -10,6 +10,8 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/home/aysa/cpp_test_project/CMakeLists.txt"
   "CMakeFiles/3.28.3/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.28.3/CMakeSystem.cmake"
+  "/home/aysa/cpp_test_project/src/lessons_01_templates/CMakeLists.txt"
+  "/home/aysa/cpp_test_project/src/lessons_ya_contest/CMakeLists.txt"
   "/usr/share/cmake-3.28/Modules/CMakeCXXInformation.cmake"
   "/usr/share/cmake-3.28/Modules/CMakeCommonLanguageInclude.cmake"
   "/usr/share/cmake-3.28/Modules/CMakeGenericSystem.cmake"
@@ -38,9 +40,11 @@ set(CMAKE_MAKEFILE_OUTPUTS
 # Byproducts of CMake generate step:
 set(CMAKE_MAKEFILE_PRODUCTS
   "CMakeFiles/CMakeDirectoryInformation.cmake"
+  "src/lessons_01_templates/CMakeFiles/CMakeDirectoryInformation.cmake"
+  "src/lessons_ya_contest/CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/ferz.dir/DependInfo.cmake"
+  "src/lessons_ya_contest/CMakeFiles/check_pass.dir/DependInfo.cmake"
   )

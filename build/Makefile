@@ -117,41 +117,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named ferz
+# Target rules for targets named check_pass
 
 # Build rule for target.
-ferz: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ferz
-.PHONY : ferz
+check_pass: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 check_pass
+.PHONY : check_pass
 
 # fast build rule for target.
-ferz/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ferz.dir/build.make CMakeFiles/ferz.dir/build
-.PHONY : ferz/fast
-
-src/ferz.o: src/ferz.cpp.o
-.PHONY : src/ferz.o
-
-# target to build an object file
-src/ferz.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ferz.dir/build.make CMakeFiles/ferz.dir/src/ferz.cpp.o
-.PHONY : src/ferz.cpp.o
-
-src/ferz.i: src/ferz.cpp.i
-.PHONY : src/ferz.i
-
-# target to preprocess a source file
-src/ferz.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ferz.dir/build.make CMakeFiles/ferz.dir/src/ferz.cpp.i
-.PHONY : src/ferz.cpp.i
-
-src/ferz.s: src/ferz.cpp.s
-.PHONY : src/ferz.s
-
-# target to generate assembly for a file
-src/ferz.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ferz.dir/build.make CMakeFiles/ferz.dir/src/ferz.cpp.s
-.PHONY : src/ferz.cpp.s
+check_pass/fast:
+	$(MAKE) $(MAKESILENT) -f src/lessons_ya_contest/CMakeFiles/check_pass.dir/build.make src/lessons_ya_contest/CMakeFiles/check_pass.dir/build
+.PHONY : check_pass/fast
 
 # Help Target
 help:
@@ -161,10 +137,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... ferz"
-	@echo "... src/ferz.o"
-	@echo "... src/ferz.i"
-	@echo "... src/ferz.s"
+	@echo "... check_pass"
 .PHONY : help
 
 

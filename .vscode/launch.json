@@ -5,7 +5,7 @@
         "type": "lldb",
         "request": "launch",
         "name": "Launch",
-        "program": "${workspaceFolder}/build/ferz",
+        "program": "${workspaceFolder}/build/check_pass",
         "args": [],
         "cwd": "${workspaceFolder}"
     }
