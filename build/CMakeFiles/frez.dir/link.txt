@@ -1,0 +1,1 @@
+/usr/bin/clang++ -g CMakeFiles/frez.dir/src/ferz.cpp.o -o frez 

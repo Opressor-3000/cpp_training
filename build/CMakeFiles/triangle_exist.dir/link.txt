@@ -1,0 +1,1 @@
+/usr/bin/clang++ -g CMakeFiles/triangle_exist.dir/src/triangle_exist.cpp.o -o triangle_exist 
