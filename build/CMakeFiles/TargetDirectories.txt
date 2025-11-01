@@ -1,0 +1,7 @@
+/home/aysa/cpp_test_project/build/CMakeFiles/edit_cache.dir
+/home/aysa/cpp_test_project/build/CMakeFiles/rebuild_cache.dir
+/home/aysa/cpp_test_project/build/src/lessons_01_templates/CMakeFiles/edit_cache.dir
+/home/aysa/cpp_test_project/build/src/lessons_01_templates/CMakeFiles/rebuild_cache.dir
+/home/aysa/cpp_test_project/build/src/lessons_ya_contest/CMakeFiles/check_pass.dir
+/home/aysa/cpp_test_project/build/src/lessons_ya_contest/CMakeFiles/edit_cache.dir
+/home/aysa/cpp_test_project/build/src/lessons_ya_contest/CMakeFiles/rebuild_cache.dir
