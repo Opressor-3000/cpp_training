@@ -1,1 +1,0 @@
-/usr/bin/clang++ -g CMakeFiles/sum_.dir/src/sum_from_str.cpp.o -o sum_ 
