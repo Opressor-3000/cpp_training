@@ -1,1 +1,0 @@
-/usr/bin/clang++ -g CMakeFiles/leap_year.dir/src/leap_year.cpp.o -o leap_year 

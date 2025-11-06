@@ -1,1 +1,0 @@
-/usr/bin/clang++ -g CMakeFiles/binout.a.dir/sum_from_str.cpp.o -o binout.a 

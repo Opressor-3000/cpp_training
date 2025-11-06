@@ -1,0 +1,14 @@
+cmake_minimum_required(VERSION 3.12)
+
+project(cpp_test_project VERSION 0.1 LANGUAGES CXX)
+
+add_subdirectory(src/lessons_01_templates)
+add_subdirectory(src/lessons_ya_contest)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+
+

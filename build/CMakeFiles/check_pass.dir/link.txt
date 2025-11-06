@@ -1,1 +1,0 @@
-/usr/bin/clang++ -g CMakeFiles/check_pass.dir/src/check_pass.cpp.o -o check_pass 

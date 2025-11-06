@@ -1,1 +1,0 @@
-/usr/bin/clang++ -g CMakeFiles/ch.dir/src/month_days.cpp.o -o ch 
