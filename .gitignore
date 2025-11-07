@@ -39,3 +39,20 @@
 
 # debug information files
 *.dwo
+
+.cache/
+
+
+.vscode/
+
+bin/
+
+build/
+
+.clangd
+
+input.txt
+
+log.txt
+
+cpp_test_project.code-workspace
