@@ -64,7 +64,6 @@ build/
 
 CMakeFiles/
 
-*.txt
 *main
 .cache/
 bin/
