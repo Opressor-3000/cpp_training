@@ -9,9 +9,9 @@ project(cpp_training)
 set(CMAKE_CXX_STANDARD 20)
 
 
-add_subdirectory(src/lessons_01_move)
+# add_subdirectory(src/lessons_01_move)
 add_subdirectory(src/lessons_ya_contest)
-add_subdirectory(src/lessons_02_templates)
+# add_subdirectory(src/lessons_02_templates)
 
 set(CMAKE_BUILD_TYPE=Debug)
 

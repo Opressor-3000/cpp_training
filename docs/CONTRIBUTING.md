@@ -10,3 +10,8 @@
 - Все тесты должны проходить.
 - Соблюдайте стиль кода
 - PR должен содержать описание изменений.
+
+
+
+Don't forget to read [README.md](./README.md)
+You can also take a look at the [BRANCHES.md](./BRANCHES.md)
