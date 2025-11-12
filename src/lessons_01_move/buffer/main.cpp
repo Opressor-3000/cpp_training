@@ -34,7 +34,7 @@ struct Buffer {
         }
         return *this;
     }
-    Buffer& operator= (Buffer&& other) {
+    Buffer& operator= (Buffer&& other) noexcept {
         if(this != &other) 
         {
             std::swap(n, other.n);
