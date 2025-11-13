@@ -15,13 +15,16 @@ TODO: реализуй:
 
 #include <cstring>
 #include <utility>
+#include <cstddef>
 
 struct Buffer {
     size_t n{};
     char* data{};
-
+    
     explicit Buffer(size_t n): n(n), data(new char[n]{}) {}
-    Buffer (const Buffer& obj) noexcept : n(obj.n), data(new char(*obj.data)) { }
+    Buffer (const Buffer& obj): n(obj.n), data(new char[*obj.data]) {
+        std::memcpy(data, obj.data, n);
+     }
     Buffer (Buffer&& other) noexcept : n(other.n), data(other.data) {
         other.n = 0;
         other.data = nullptr;
@@ -29,8 +32,10 @@ struct Buffer {
     Buffer& operator= (const Buffer& obj) {
         if (this != &obj) 
         {
+            delete[] data;
             n = obj.n;
-            data = obj.data;
+            data = new char[n];
+            std::memcpy(data, obj.data, n);
         }
         return *this;
     }
