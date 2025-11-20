@@ -15,7 +15,11 @@ struct Token {
 
     Token(Token&& other) noexcept : p(other.p) { other.p = nullptr; }
     Token& operator=(Token&& other) noexcept {
-        if (this != &other) { delete p; p = other.p; other.p = nullptr; }
+        if (this != &other) { 
+            delete p; 
+            p = other.p; 
+            other.p = nullptr; 
+        }
         return *this;
     }
 };
