@@ -1,0 +1,1 @@
+add_executable(move_semantic move_semantic/main.cpp)
