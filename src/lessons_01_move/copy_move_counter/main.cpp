@@ -38,7 +38,6 @@ struct Counter {
 };
 
 int main() {
-    Counter::copies = Counter::moves = 0;
     Counter a, d;
     Counter b = a;                // копия 
     Counter c = std::move(a);     // перемещение
