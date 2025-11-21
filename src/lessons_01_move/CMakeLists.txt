@@ -2,4 +2,4 @@
 
 
 
-add_executable(buffer lessons_01_move/buffer)
+add_executable(buffer buffer/main.cpp)
