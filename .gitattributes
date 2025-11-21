@@ -1,0 +1,2 @@
+CMakeLists.txt merge=union
+src/lessons_01_move/CMakeLists.txt merge=union
