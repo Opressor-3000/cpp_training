@@ -18,7 +18,7 @@ int main() {
     std::vector<std::string> from = {"a","bb","ccc"};
     std::vector<std::string> to;
 
-    to.assign(from.begin(), from.end());
+    to.assign(from.begin(), from.end()); // просходит копирование исходный вектор остается неизменным
     std::cout << "after copy: from[0]=" << from[0] << "\n";
 
     // 2) move-итераторы
@@ -26,6 +26,7 @@ int main() {
     std::vector<std::string> to2;
 
     to2.assign(std::make_move_iterator(from2.begin()),
-               std::make_move_iterator(from2.end()));
+               std::make_move_iterator(from2.end()));  //  происходт перемещение исходный объект остается валидным но пустым 
     std::cout << "after move: from2[0]=" << from2[0] << "\n";
 }
+
