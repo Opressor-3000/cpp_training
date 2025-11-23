@@ -17,7 +17,11 @@ struct Box {
         if (other.p != nullptr) other.p=nullptr;
     }
     Box& operator=(Box&& other) noexcept {
-        if (this != &other) { delete p; p = other.p; other.p=nullptr; }
+        if (this != &other) { 
+            delete p; 
+            p = other.p; 
+            if (other.p != nullptr) other.p = nullptr; 
+        }
         return *this;
     }
 };
