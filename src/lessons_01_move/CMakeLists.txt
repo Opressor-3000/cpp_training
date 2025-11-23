@@ -2,3 +2,7 @@ add_executable(copy_move_diff copy_move_diff/main.cpp)
 add_executable(copy_move_counter copy_move_counter/main.cpp)
 add_executable(move_semantic move_semantic/main.cpp)
 add_executable(uncopyable Uncopyable/main.cpp)
+
+
+
+add_executable(simple_wrap perfect_forwarding_wrap/main.cpp)
