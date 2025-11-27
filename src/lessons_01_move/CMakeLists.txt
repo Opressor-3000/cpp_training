@@ -1,3 +1,4 @@
+add_executable(noexcept noexcept/main.cpp)
 add_executable(buffer buffer/main.cpp)
 add_executable(copy_move_diff copy_move_diff/main.cpp)
 add_executable(copy_move_counter copy_move_counter/main.cpp)
