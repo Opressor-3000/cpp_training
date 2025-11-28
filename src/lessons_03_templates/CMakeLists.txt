@@ -1,1 +1,1 @@
-add_executable(template_01 template/main.cpp)
+add_executable(template_01 increment/main.cpp)
