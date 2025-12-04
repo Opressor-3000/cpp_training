@@ -18,4 +18,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
 
-add_subdirectory(src/lessons_01_move)
+
+add_compile_options(-g -Wall -Wextra -Wpedantic -O2)
+
+add_subdirectory(src/lessons_04_templates)
