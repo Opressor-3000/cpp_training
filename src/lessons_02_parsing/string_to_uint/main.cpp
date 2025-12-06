@@ -31,7 +31,7 @@ template<typename T, typename
         >
     > * = nullptr
 >
-std::optional<uint64_t> string_view_to_uint64bytes(T t) 
+std::optional<uint64_t> string_view_to_uint64bits(T t) 
 {
     uint64_t res {0};
     int digit;
@@ -71,6 +71,6 @@ std::optional<uint64_t> string_view_to_uint64bytes(T t)
 int main(void)
 {
     std::string_view str = "1,3,64";
-    auto res = string_view_to_uint64bytes(str);
+    auto res = string_view_to_uint64bits(str);
     if (res) { std::cout << *res << '\n';}
 }
