@@ -17,6 +17,7 @@
 #include <type_traits>
 #include <cstddef>
 #include <iostream>
+#include <string>
 
 template <typename T, typename S>
 class split_iterator {
@@ -56,10 +57,6 @@ public:
         return pos_ != other.pos_;
     }
 
-    std::ostream& operator<<(std::ostream &ost, const auto &itr) 
-    {
-        return ost << *itr;
-    }
 private:
     void find_() 
     {
@@ -79,6 +76,11 @@ private:
     }
 };
 
+template <typename T, typename S>
+std::ostream& operator<<(std::ostream& os, split_iterator<T, S> const& it)
+{
+    return os << *it;
+}
 
 int main(void)
 {
