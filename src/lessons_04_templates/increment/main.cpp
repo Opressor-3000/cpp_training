@@ -12,13 +12,12 @@ template<typename T>
 struct IsSame {static constexpr bool value = false;};
 
 template<typename T>
-typename std::enable_if<
+typename std::enable_if_t<
     std::is_integral<T>::value &&
-    !std::is_same<T, char>::value &&
     !std::is_same<T, unsigned char>::value &&
     !std::is_same<T, signed char>::value,
     T
->::type
+>
 increment(T t) { return ++t; }
 
 int main(void)
