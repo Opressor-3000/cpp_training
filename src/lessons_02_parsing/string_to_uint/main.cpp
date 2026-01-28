@@ -1,5 +1,5 @@
 /*
-На вход подаётся `std::string_view`, где записаны числа от **1 до 64**, 
+На вход подаётся std::string_view, где записаны числа от 1 до 64, 
 разделённые запятыми.
 Нужно превратить эту строку в число типа uint64_t, где каждый бит 
 соответствует числу из строки.
@@ -11,66 +11,55 @@
     Числа могут быть окружены пробелами
   - Если встретилось некорректное число (например, 0, 999 или буквы) 
     — нужно вернуть ошибку через std::optional
+
 */
 
-#include <cmath>
-#include <exception>
+#include <cassert>
 #include <optional>
-#include <string>
 #include <string_view>
-#include <type_traits>
 #include <cstdint>
-#include <cstring>
-#include <iostream>
 
-template<typename T, typename
-    std::enable_if_t<
-        std::is_same_v<
-            T, 
-            std::string_view
-        >
-    > * = nullptr
->
-std::optional<uint64_t> string_view_to_uint64bits(T t) 
+std::optional<uint64_t> string_view_to_uint64bits(std::string_view t) noexcept
 {
     uint64_t res {0};
-    int digit;
-    uint8_t num = 0;
+    uint64_t num {0};
     constexpr int min_size = 1;
     constexpr int max_size = 64;
     if(t.size() == 0) return 0;
-    for(
-        auto vbgn = t.begin(), 
-        vend = t.end();
-        vbgn < vend; 
-        ++vbgn 
-    ) {
-        if(*vbgn == ',')
+    for(char c : t)
+    {
+        
+        if(num && c == ',')
         {
-            num = std::pow(2, num - 1);
-            res = res | num;
+            if(num < min_size or num > max_size) return std::nullopt;
+            res |= (uint64_t{1} << (num - 1));
             num = 0;
+            continue;
         }
-        if(*vbgn >= '0' && *vbgn <= '9')
+        if(c == ' ' || c == ',') continue;
+        if(c >= '0' && c <= '9')
         {
-            digit = *vbgn - '0';
             if (num) {
                 num *= 10;
-                num += digit;
+                num += c - '0';
             }
-            if(!num) num = digit;
-            
-            if(num < min_size or num > max_size) {
-                return std::nullopt ;
-            }
+            else num = c - '0';
         } else { return std::nullopt; }
     }
-    return res;
+    if(num) 
+    {
+        if(num < min_size or num > max_size) return std::nullopt;
+        res |= (uint64_t{1} << (num - 1));
+    }
+    return std::optional<uint64_t>(res);
 }
 
 int main(void)
 {
-    std::string_view str = "1,3,64";
-    auto res = string_view_to_uint64bits(str);
-    if (res) { std::cout << *res << '\n';}
+    std::string_view str = "9,3,,  ", str2 = "3, 0 ,,3,45", str3 = ",, 65 ", str4 = "7,  ,53,8,31", str5 = ", 43,f, ";
+    assert(string_view_to_uint64bits(str3) == std::nullopt);
+    assert(string_view_to_uint64bits(str) == (1ULL << 8) + 4);
+    assert(string_view_to_uint64bits(str2) == (1ULL << 44) + 4);
+    assert(string_view_to_uint64bits(str4) == (1ULL << 30) + (1ULL << 52) + 128 + 64);
+    assert(string_view_to_uint64bits(str5) == std::nullopt); 
 }
