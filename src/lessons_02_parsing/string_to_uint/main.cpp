@@ -22,32 +22,30 @@
 std::optional<uint64_t> string_view_to_uint64bits(std::string_view t) noexcept
 {
     uint64_t res {0};
-    uint64_t num {0};
+    int64_t num {-1};
     constexpr int min_size = 1;
     constexpr int max_size = 64;
     if(t.size() == 0) return 0;
     for(char c : t)
     {
-        
-        if(num && c == ',')
+        if(c == ',' && num != -1)
         {
-            if(num < min_size or num > max_size) return std::nullopt;
+            if(num < min_size or num > max_size) {
+                return std::nullopt;
+            }
             res |= (uint64_t{1} << (num - 1));
-            num = 0;
+            num = -1;
             continue;
-        }
+        } 
         if(c == ' ' || c == ',') continue;
-        if(c >= '0' && c <= '9')
-        {
-            if (num) {
+        if(c >= '0' && c <= '9') {
+            if (num > 0) {
                 num *= 10;
                 num += c - '0';
-            }
-            else num = c - '0';
+            } else num = c - '0';
         } else { return std::nullopt; }
     }
-    if(num) 
-    {
+    if(num != -1) {
         if(num < min_size or num > max_size) return std::nullopt;
         res |= (uint64_t{1} << (num - 1));
     }
@@ -56,10 +54,12 @@ std::optional<uint64_t> string_view_to_uint64bits(std::string_view t) noexcept
 
 int main(void)
 {
-    std::string_view str = "9,3,,  ", str2 = "3, 0 ,,3,45", str3 = ",, 65 ", str4 = "7,  ,53,8,31", str5 = ", 43,f, ";
-    assert(string_view_to_uint64bits(str3) == std::nullopt);
-    assert(string_view_to_uint64bits(str) == (1ULL << 8) + 4);
-    assert(string_view_to_uint64bits(str2) == (1ULL << 44) + 4);
-    assert(string_view_to_uint64bits(str4) == (1ULL << 30) + (1ULL << 52) + 128 + 64);
-    assert(string_view_to_uint64bits(str5) == std::nullopt); 
+    assert(string_view_to_uint64bits(",,9, 3 ,,  ") == (1ULL << 8) + (1ULL << 2));
+    assert(string_view_to_uint64bits("58, 43,   0, ") == std::nullopt); 
+    assert(string_view_to_uint64bits("14, 28, 65 ,") == std::nullopt);
+    assert(string_view_to_uint64bits("10, 1, 100") == std::nullopt);
+    assert(string_view_to_uint64bits(" 7 ,  ,53,, 31 ,") == (1ULL << 30) + (1ULL << 52) + (1ULL << 6));
+    assert(string_view_to_uint64bits("") == 0);
+    assert(string_view_to_uint64bits("o") == std::nullopt);
+    assert(string_view_to_uint64bits("0") == std::nullopt);
 }
