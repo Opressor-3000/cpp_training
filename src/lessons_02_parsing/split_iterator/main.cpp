@@ -13,83 +13,65 @@
 Не использовать std::vector, std::string или std::stringstream.
 */
 
+#include <concepts>
+#include <iterator>
 #include <string_view>
 #include <type_traits>
 #include <cstddef>
 #include <iostream>
-#include <string>
 
-template <typename T, typename S>
 class split_iterator {
-    T& str_;          
-    S delimiter_;     
-    size_t pos_; 
-    size_t npos_;
-    std::string_view current_;
 public:
-    split_iterator() : str_{""}, pos_{std::string_view::npos} {}
-    split_iterator(T& str, S delimiter)
-    : str_(str), delimiter_(delimiter), pos_(0) 
+    split_iterator() = default;
+    split_iterator(std::string_view str, char d) : str_(str), delimeter_(d), pos_(0) 
     {
-        skip_delimiter();
+        find_next();  
     }
-
-    void skip_delimiter() 
-    {
-        while (pos_ < str_.size() && str_[pos_] == delimiter_) 
-        {
-            ++pos_;
+    std::string_view operator*() const {
+        return current_; 
+    }
+    split_iterator& operator++() {
+        if (next_ == std::string_view::npos) {
+            pos_ = std::string_view::npos;
+            return *this;
         }
-    }
-    split_iterator& operator++() 
-    {
-        find_();
+        pos_ = next_ + 1;
+        find_next();
         return *this;
     }
-
-    auto operator*() const 
-    {
-        return current_;
-    }
-
-    bool operator!=(const split_iterator& other) const
-    {
+    bool operator!=(const split_iterator& other) const {
         return pos_ != other.pos_;
     }
-
 private:
-    void find_() 
-    {
-        if(pos_ == std::string::npos)
-        {
-            str_ = "";
+    void find_next() {
+        if (pos_ > str_.size()) {
+            pos_ = std::string_view::npos;
             return;
         }
-        size_t next_pos = str_.find(delimiter_, pos_);
-        if(next_pos == std::string_view::npos) {
-            str_ = str_.substr(pos_);
-            pos_ = std::string_view::npos;
-        } else {
-            str_ = str_.substr(pos_, next_pos - pos_);
-            pos_ = next_pos + 1;
-        }
+        next_ = str_.find(delimeter_, pos_);
+        size_t end = (next_ == std::string_view::npos) ? str_.size() : next_;
+        current_ = str_.substr(pos_, end - pos_);  // 
     }
+    std::string_view str_{};
+    std::string_view current_{};
+    char delimeter_{};
+    size_t pos_{ std::string_view::npos};
+    size_t next_{std::string_view::npos};
 };
-
-template <typename T, typename S>
-std::ostream& operator<<(std::ostream& os, split_iterator<T, S> const& it)
-{
-    return os << *it;
-}
 
 int main(void)
 {
-    std::string_view s = "a,,bсd,";
+    std::string_view s = "a,,bсd,", s1 = "";
 
     split_iterator it{s, ','};   // итератор на начало
     split_iterator end{};        // итератор-конец
 
-    for (; it != end; ++it) {
-        std::cout << "[" << *it << "]";
+    for (; it != end; ++it) {  
+        std::cout << "[" << *it << "]"; // => [a][][bcd]
+    }
+    std::cout << std::endl;
+    split_iterator it1{s1, ','};
+    for (; it1 != end; ++it1) { // 
+        std::cout << "[" << *it1 << "]";  // => []
     }
 }
