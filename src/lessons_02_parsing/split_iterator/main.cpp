@@ -19,6 +19,9 @@
 #include <type_traits>
 #include <cstddef>
 #include <iostream>
+#include <cassert>
+#include <sstream>
+#include <string>
 
 class split_iterator {
 public:
@@ -44,7 +47,7 @@ public:
     }
 private:
     void find_next() {
-        if (pos_ > str_.size()) {
+        if (!str_.size() || pos_ > str_.size() ) {
             pos_ = std::string_view::npos;
             return;
         }
@@ -59,19 +62,32 @@ private:
     size_t next_{std::string_view::npos};
 };
 
+
+bool test(std::string_view input, std::string_view expected )
+{
+	split_iterator it (input, ',');
+    split_iterator end{};
+	std::stringstream ss;
+	for (; it != end; ++it) {
+		ss << "[" << *it << "]";
+	}
+	std::string actual_output = ss.str();
+
+	return actual_output == expected;
+}
+
 int main(void)
 {
-    std::string_view s = "a,,bсd,", s1 = "";
+    assert(test("", ""));
+	assert(test("a", "[a]"));
+	assert(test("a,", "[a][]"));
+	assert(test(",a", "[][a]"));
+	assert(test("a,b", "[a][b]"));
+	assert(test("a,b,c,", "[a][b][c][]"));
+	assert(test("a,,b,", "[a][][b][]"));
+	assert(test("a,,b,,c,", "[a][][b][][c][]"));
+	assert(test("abc", "[abc]"));
+	assert(test("abc,a", "[abc][a]"));
+	assert(test("ac,abc,de", "[ac][abc][de]"));
 
-    split_iterator it{s, ','};   // итератор на начало
-    split_iterator end{};        // итератор-конец
-
-    for (; it != end; ++it) {  
-        std::cout << "[" << *it << "]"; // => [a][][bcd]
-    }
-    std::cout << std::endl;
-    split_iterator it1{s1, ','};
-    for (; it1 != end; ++it1) { // 
-        std::cout << "[" << *it1 << "]";  // => []
-    }
 }
