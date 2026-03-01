@@ -19,6 +19,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
 
 
-add_compile_options(-g -Wall -Wextra -Wpedantic -O2)
+add_compile_options(-Wall -Wextra -Wpedantic)
 
 add_subdirectory(src/lessons_04_templates)
