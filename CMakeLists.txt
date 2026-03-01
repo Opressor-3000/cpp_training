@@ -14,8 +14,4 @@ set(CMAKE_BUILD_TYPE=Debug)
 # Папка, куда будут складываться исполняемые файлы
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
-
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
-
 add_subdirectory(src/lessons_02_parsing)
