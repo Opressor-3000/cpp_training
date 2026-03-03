@@ -19,7 +19,7 @@
 #include <string_view>
 #include <cstdint>
 
-std::optional<uint64_t> string_view_to_uint64bits(std::string_view t) noexcept
+std::optional<uint64_t> parse_bits(std::string_view t) noexcept
 {
     uint64_t res {0};
     int64_t num {-1};
@@ -55,39 +55,39 @@ std::optional<uint64_t> string_view_to_uint64bits(std::string_view t) noexcept
 int main(void)
 {
 
-	assert(string_view_to_uint64bits("") == 0);
+	assert(parse_bits("") == 0);
 
-	assert(string_view_to_uint64bits("1") == 1ULL << 0);
-	assert(string_view_to_uint64bits("64") == 1ULL << 63);
-	assert(string_view_to_uint64bits(",") == std::nullopt);
-	assert(string_view_to_uint64bits("65") == std::nullopt);
-	assert(string_view_to_uint64bits("999") == std::nullopt);
-	assert(string_view_to_uint64bits("999999999999999999999999999999999") == std::nullopt);
+	assert(parse_bits("1") == 1ULL << 0);
+	assert(parse_bits("64") == 1ULL << 63);
+	assert(parse_bits(",") == std::nullopt);
+	assert(parse_bits("65") == std::nullopt);
+	assert(parse_bits("999") == std::nullopt);
+	assert(parse_bits("999999999999999999999999999999999") == std::nullopt);
 
-	assert(string_view_to_uint64bits("1,") == std::nullopt);
-	assert(string_view_to_uint64bits(",1") == std::nullopt);
-	assert(string_view_to_uint64bits(",65") == std::nullopt);
-	assert(string_view_to_uint64bits("65,") == std::nullopt);
+	assert(parse_bits("1,") == std::nullopt);
+	assert(parse_bits(",1") == std::nullopt);
+	assert(parse_bits(",65") == std::nullopt);
+	assert(parse_bits("65,") == std::nullopt);
 
-	assert(string_view_to_uint64bits("1,1") == 1ULL << 0);
-	assert(string_view_to_uint64bits("1,2") == 1ULL << 0 | 1ULL << 1);
-	assert(string_view_to_uint64bits("2,1") == 1ULL << 0 | 1ULL << 1);
+	assert(parse_bits("1,1") == 1ULL << 0);
+	assert(parse_bits("1,2") == 1ULL << 0 | 1ULL << 1);
+	assert(parse_bits("2,1") == 1ULL << 0 | 1ULL << 1);
 
-	assert(string_view_to_uint64bits(" ") == 0);
+	assert(parse_bits(" ") == 0);
 
-	assert(string_view_to_uint64bits(" 1") == 1ULL << 0);
-	assert(string_view_to_uint64bits("1 ") == 1ULL << 0);
+	assert(parse_bits(" 1") == 1ULL << 0);
+	assert(parse_bits("1 ") == 1ULL << 0);
 
-	assert(string_view_to_uint64bits(" 1,20") == 1ULL << 0 | 1ULL << 19);
-	assert(string_view_to_uint64bits("1 ,20") == 1ULL << 0 | 1ULL << 19);
-	assert(string_view_to_uint64bits("1, 20") == 1ULL << 0 | 1ULL << 19);
-	assert(string_view_to_uint64bits("1,20 ") == 1ULL << 0 | 1ULL << 19);
-    assert(string_view_to_uint64bits(",,9, 3 ,,  ") == (1ULL << 8) + (1ULL << 2));
-    assert(string_view_to_uint64bits("58, 43,   0, ") == std::nullopt); 
-    assert(string_view_to_uint64bits("14, 28, 65 ,") == std::nullopt);
-    assert(string_view_to_uint64bits("10, 1, 100") == std::nullopt);
-    assert(string_view_to_uint64bits(" 7 ,  ,53,, 31 ,") == (1ULL << 30) + (1ULL << 52) + (1ULL << 6));
-    assert(string_view_to_uint64bits("") == 0);
-    assert(string_view_to_uint64bits("o") == std::nullopt);
-    assert(string_view_to_uint64bits("0") == std::nullopt);
+	assert(parse_bits(" 1,20") == 1ULL << 0 | 1ULL << 19);
+	assert(parse_bits("1 ,20") == 1ULL << 0 | 1ULL << 19);
+	assert(parse_bits("1, 20") == 1ULL << 0 | 1ULL << 19);
+	assert(parse_bits("1,20 ") == 1ULL << 0 | 1ULL << 19);
+    assert(parse_bits(",,9, 3 ,,  ") == (1ULL << 8) + (1ULL << 2));
+    assert(parse_bits("58, 43,   0, ") == std::nullopt); 
+    assert(parse_bits("14, 28, 65 ,") == std::nullopt);
+    assert(parse_bits("10, 1, 100") == std::nullopt);
+    assert(parse_bits(" 7 ,  ,53,, 31 ,") == (1ULL << 30) + (1ULL << 52) + (1ULL << 6));
+    assert(parse_bits("") == 0);
+    assert(parse_bits("o") == std::nullopt);
+    assert(parse_bits("0") == std::nullopt);
 }
