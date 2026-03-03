@@ -15,7 +15,7 @@ struct File {
     std::FILE* f{};
     explicit File(const char* path) {
         f = std::fopen(path, "w");
-        if (!f) throw std::runtime_error("open fail");
+        if (!f) throw std::runtime_error("open file");
     }
     ~File(){ if (f) std::fclose(f); }
 
@@ -29,7 +29,14 @@ struct File {
     }
 };
 
+File make_temp() {
+    File temp {"out_.txt"};
+    return temp;
+}
+
 int main() {
     File a("out.txt");
     File b = std::move(a);   // b владеет, a пуст
+    File c = make_temp();  //  NRVO
+    return 0;
 }
