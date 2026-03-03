@@ -4,7 +4,8 @@
 Задача «динамический массив»
 
 Цель
-Разобраться, как устроен динамический массив «под капотом»: управление памятью, конструирование и уничтожение объектов, корректная copy/move - семантика.
+Разобраться, как устроен динамический массив «под капотом»: управление памятью, 
+конструирование и уничтожение объектов, корректная copy/move - семантика.
 
 Требования к классу
 
@@ -42,7 +43,7 @@
 #include <utility>
 #include <algorithm>
 
-// using Placement New
+
 template <typename T> 
 void construct(T *p, const T &other) { new (p) T(other); }
 
@@ -52,25 +53,34 @@ void construct(T *p, T &&other) { new (p) T(std::move(other)); }
 template <typename T>
 class Vector {
 public:
-    // default 
     Vector() {};        
 
     // создать count элементов
     explicit Vector(size_t count) : 
-    data_(new T[calc_size(count)]),
     size_(calc_size(count)),
+    data_(static_cast<T*>(::operator new(sizeof(T) * size_))), //  ПОЛЕ НЕ ИНИЦИАЛИЗИРОВАНО 
     used_(calc_size(count)) {};
 
     // копирующий
-    Vector(const Vector& other) : data_(new T[other.size_]),
-    size_(other.size_), used_(other.used_) {
-        for(size_t i = 0; i < used_; ++i) construct(data_ + i, other.data_[i]);
+    Vector(const Vector& other) : 
+    size_(other.size_),
+    data_(nullptr),
+    used_(other.used_) {
+        try {
+            data_ = new T[other.size_];
+            for(size_t i = 0; i < used_; ++i) construct(data_ + i, other.data_[i]);
+        } catch (...) {
+            delete[] data_;
+            throw;
+        }
     };     
     
     // перемещающий
     Vector(Vector&& other) noexcept : 
-    size_(other.size_), used_(other.used_) {
-        data_ = other.data_;
+      size_(other.size_), 
+      used_(other.used_), 
+      data_(other.data_) 
+    {
         other.size_ = 0;
         other.used_ = 0;
         other.data_ = nullptr;
@@ -79,19 +89,25 @@ public:
     // destructor
     ~Vector() {delete[] data_; };
 
+    // копирование присваиванием
     Vector& operator=(const Vector& other) {
-        Vector tmp(other);
-        std::swap(*this, tmp);
+        if (this != &other) {
+            Vector tmp(other);
+            std::swap(*this, tmp);
+        }
         return *this;
     };
 
-    //
+    // перемещение присваиванием
     Vector& operator=(Vector&& other) noexcept {
         if (this != &other) {
             delete[] data_;
             data_ = other.data_;
             size_ = other.size_;
             used_ = other.used_;
+            other.data_ = nullptr;
+            other.size_ = 0;
+            other.used_ = 0;
         }
         return *this;
     };
@@ -109,9 +125,9 @@ public:
 
     const T& operator[](size_t index) const { return data_[index];}
 
-    size_t size() const noexcept { return size_;};    // количество элементов
+    size_t size() const noexcept { return size_;};   
 
-    // вставить элемент в конец lvalue ссылке
+    // вставить элемент в конец по lvalue ссылке
     void push(const T& t) {
         static_assert(std::is_same<std::decay_t<decltype(t)>, T>::value,
                     "MyVector<T> only accepts objects of exact type T");
@@ -119,7 +135,7 @@ public:
         data_[used_++] = t;
     }
 
-    // вставить элемент в конец rvalue ссылке
+    // вставить элемент в конец по rvalue ссылке
     void push(T&& t) {
         static_assert(std::is_same<std::decay_t<decltype(t)>, T>::value,
                     "MyVector<T> only accepts objects of exact type T");
@@ -128,8 +144,12 @@ public:
         static_assert(std::is_nothrow_move_assignable<T>::value,
                     "The type has a non-throwing move assignment operator.");
         if (used_ == size_) resize();
-        construct(data_ + used_, std::move(t));
-        ++used_;
+        try {
+            construct(data_ + used_, std::move(t));
+            ++used_;
+        } catch (...) {
+            throw;
+        }
     }
 
     void resize()
@@ -137,7 +157,7 @@ public:
         resize_internal(this->size_ * this->resize_factor);
     }
 
-    void resize(size_t size_new) {resize_internal(size_new);}
+    void resize(size_t new_size) {resize_internal(new_size);}
 
     // проверяем пустой ли контейнер
     bool empty() const noexcept { return used_ == 0; }
@@ -170,12 +190,12 @@ public:
         --size_;
     }
 
-    // sub vector
+    // создаем vector из subvector
     Vector subvector(size_t begin) const {
-        if (used_ < begin) throw std::out_of_range("index out of range");
+        if (begin >= size_) throw std::out_of_range("index out of range");
         size_t dlt = used_ - begin;
         Vector other(dlt);
-        for (size_t i = begin, j = 0; i < size_; ++i) {
+        for (size_t i = begin; i < size_; ++i) {
             construct(other.data_ + i, data_[begin + i]);
         }
         return other;
@@ -185,7 +205,7 @@ public:
         if (begin > end or used_ > end) throw std::out_of_range("index out of range");
         size_t new_sz = end - begin;
         Vector other(end - begin);
-        for(size_t i = begin; i > new_sz; ++i) {
+        for(size_t i = begin; i < new_sz; ++i) {
             construct(other.data_ + i, data_[begin + i]);
         }
         return other;
@@ -195,21 +215,28 @@ private:
     T* data_ = nullptr;
     size_t size_ = 0;
     size_t used_ = 0;
-    static const uint32_t max_byte = 1000000000U; 
+    static const uint32_t max_byte = (1UL << 32) - 1; 
     static constexpr size_t MIN_SIZE = 800;
     const uint16_t resize_factor = 2;
+
     //  написать проверку что бы if (count * sizeof(T) < 10^9 байт)
-    void resize_internal(size_t size_new)
+    void resize_internal(size_t new_size)
     {
-        if(size_new <= size_)
-            return;
-        while(size_ < size_new) {
+        if(new_size <= size_) return;
+        if (size_ > max_byte) size_ = max_byte;
+        else while(size_ < new_size) {
             size_ *= resize_factor;
         }
         T *p = new T[size_];
-        for(size_t i = 0; i < used_; ++i) {
-            construct(p + i, std::move(data_[i]));
+        try {
+            for(size_t i = 0; i < used_; ++i) {
+                construct(p + i, std::move(data_[i]));
+            }
+        } catch (...) {
+            delete[] p;
+            throw;
         }
+
         delete[] data_;
         data_ = p;
     }
@@ -220,6 +247,167 @@ private:
         return std::max(requir_sz, min_elements);
     }
 };
+
+
+
+struct TestObject {
+    static int ctor;
+    static int copy_ctor;
+    static int move_ctor;
+    static int dtor;
+
+    int value;
+
+    TestObject(int v = 0) : value(v) { ++ctor; }
+
+    TestObject(const TestObject& other) : value(other.value) {
+        ++copy_ctor;
+    }
+
+    TestObject(TestObject&& other) noexcept : value(other.value) {
+        ++move_ctor;
+        other.value = -1;
+    }
+
+    TestObject& operator=(const TestObject& other) {
+        if (this != &other) {
+            value = other.value;
+        }
+        return *this;
+    }
+
+    TestObject& operator=(TestObject&& other) noexcept {
+        if (this != &other) {
+            *this = std::move(other);
+        }
+        return *this;
+    }
+
+    ~TestObject() { ++dtor; }
+
+    static void reset() {
+        ctor = copy_ctor = move_ctor = dtor = 0;
+    }
+};
+
+int TestObject::ctor = 0;
+int TestObject::copy_ctor = 0;
+int TestObject::move_ctor = 0;
+int TestObject::dtor = 0;
+
+void test_subvector() {
+    Vector<int> v(5);
+
+    for (int i = 0; i < 5; ++i)
+        v[i] = i;
+
+    Vector<int> sub = v.subvector(2);
+
+    assert(sub[0] == 2);
+    assert(sub[1] == 3);
+    assert(sub[2] == 4);
+}
+
+
+void test_destruction() {
+    TestObject::reset();
+
+    {
+        Vector<TestObject> v(3);
+    }
+
+    assert(TestObject::ctor + 
+           TestObject::copy_ctor + 
+           TestObject::move_ctor == TestObject::dtor);
+}
+
+void test_out_of_range() {
+    Vector<int> v(2);
+    bool thrown = false;
+
+    try {
+        v.at(100);
+    } catch (const std::out_of_range&) {
+        thrown = true;
+    }
+
+    assert(thrown);
+}
+
+void test_resize() {
+    Vector<int> v(2);
+
+    v.push(1);
+    v.push(2);
+    v.push(3); // должен вызвать resize
+
+    assert(v[2] == 3);
+}
+
+void test_move_assignment() {
+    Vector<int> v1(2);
+    v1[0] = 100;
+
+    Vector<int> v2(1);
+    v2 = std::move(v1);
+
+    assert(v2[0] == 100);
+}
+
+
+void test_copy_assignment() {
+    Vector<int> v1(2);
+    v1[0] = 10;
+    v1[1] = 20;
+
+    Vector<int> v2(2);
+    v2 = v1;
+
+    assert(v2[0] == 10);
+    assert(v2[1] == 20);
+}
+
+
+void test_move_constructor() {
+    TestObject::reset();
+
+    Vector<TestObject> v(2);
+    v[0] = TestObject(5);
+
+    Vector<TestObject> moved(std::move(v));
+
+    assert(moved[0].value == 5);
+}
+
+void test_copy_constructor() {
+    TestObject::reset();
+
+    Vector<TestObject> v(2);
+    v[0] = TestObject(10);
+    v[1] = TestObject(20);
+
+    Vector<TestObject> copy(v);
+
+    assert(copy[0].value == 10);
+    assert(copy[1].value == 20);
+}
+
+void test_push_and_access() {
+    Vector<int> v(2);
+
+    v.push(1);
+    v.push(2);
+
+    assert(v[0] == 1);
+    assert(v[1] == 2);
+}
+
+void test_basic_creation() {
+    Vector<int> v(10);
+    assert(v.size() >= 10);
+    assert(!v.empty());
+}
+
 
 int main (void)
 {
