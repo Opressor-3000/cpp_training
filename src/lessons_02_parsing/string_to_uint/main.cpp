@@ -49,7 +49,7 @@ std::optional<uint64_t> string_view_to_uint64bits(std::string_view t) noexcept
         if(num < min_size or num > max_size) return std::nullopt;
         res |= (uint64_t{1} << (num - 1));
     }
-    return std::optional<uint64_t>(res);
+    return res;
 }
 
 int main(void)
