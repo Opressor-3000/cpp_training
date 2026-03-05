@@ -58,19 +58,23 @@ public:
     // создать count элементов
     explicit Vector(size_t count) : 
     size_(calc_size(count)),
-    data_(static_cast<T*>(::operator new(sizeof(T) * size_))), //  ПОЛЕ НЕ ИНИЦИАЛИЗИРОВАНО 
-    used_(calc_size(count)) {};
+    data_(static_cast<T*>(::operator new(sizeof(T) * size_))),
+    used_(calc_size(count)) {
+        for (size_t i = 0; i < used_; ++i)
+            new (data_ + i) T(); 
+    };
 
     // копирующий
     Vector(const Vector& other) : 
-    size_(other.size_),
-    data_(nullptr),
-    used_(other.used_) {
+      size_(other.size_),
+      data_(nullptr),
+      used_(other.used_) 
+    {
         try {
-            data_ = new T[other.size_];
+            data_ = static_cast<T*>(::operator new(sizeof(T) * size_));
             for(size_t i = 0; i < used_; ++i) construct(data_ + i, other.data_[i]);
         } catch (...) {
-            delete[] data_;
+            destroy();
             throw;
         }
     };     
@@ -78,17 +82,18 @@ public:
     // перемещающий
     Vector(Vector&& other) noexcept : 
       size_(other.size_), 
-      used_(other.used_), 
-      data_(other.data_) 
+      data_(other.data_),
+      used_(other.used_)
     {
         other.size_ = 0;
-        other.used_ = 0;
         other.data_ = nullptr;
+        other.used_ = 0;
     }; 
 
     // destructor
-    ~Vector() {delete[] data_; };
-
+    ~Vector() {
+        destroy();
+    }
     // копирование присваиванием
     Vector& operator=(const Vector& other) {
         if (this != &other) {
@@ -101,12 +106,12 @@ public:
     // перемещение присваиванием
     Vector& operator=(Vector&& other) noexcept {
         if (this != &other) {
-            delete[] data_;
-            data_ = other.data_;
+            destroy();
             size_ = other.size_;
+            data_ = other.data_;
             used_ = other.used_;
-            other.data_ = nullptr;
             other.size_ = 0;
+            other.data_ = nullptr;
             other.used_ = 0;
         }
         return *this;
@@ -125,14 +130,14 @@ public:
 
     const T& operator[](size_t index) const { return data_[index];}
 
-    size_t size() const noexcept { return size_;};   
+    size_t size() const noexcept { return used_;};   
 
     // вставить элемент в конец по lvalue ссылке
     void push(const T& t) {
         static_assert(std::is_same<std::decay_t<decltype(t)>, T>::value,
                     "MyVector<T> only accepts objects of exact type T");
         if (used_ == size_) resize();
-        data_[used_++] = t;
+        construct(data_ + used_, t);
     }
 
     // вставить элемент в конец по rvalue ссылке
@@ -162,12 +167,9 @@ public:
     // проверяем пустой ли контейнер
     bool empty() const noexcept { return used_ == 0; }
 
-    // обмен значениями
-    void swap() {}
-
     // очистить контейнер
     void clear() {
-        for(size_t i = 0; i < size_; ++i) data_[i].~T();
+        for(size_t i = 0; i < used_; ++i) data_[i].~T();
         used_ = 0;
     }
 
@@ -180,22 +182,22 @@ public:
     // получить последний элемент
     T& back() {
         assert(used_ > 0);
-        return data_[size_ - 1];
+        return data_[used_ - 1];
     }
 
     // вернут и удалить последний элемент
     void pop() {
         assert(used_ > 0);
+        --used_;
         data_[used_].~T();
-        --size_;
     }
 
     // создаем vector из subvector
     Vector subvector(size_t begin) const {
-        if (begin >= size_) throw std::out_of_range("index out of range");
-        size_t dlt = used_ - begin;
+        if (begin >= used_) throw std::out_of_range("index out of range");
+        size_t dlt = used_ - begin + 1;
         Vector other(dlt);
-        for (size_t i = begin; i < size_; ++i) {
+        for (size_t i = 0; i < dlt; ++i) {
             construct(other.data_ + i, data_[begin + i]);
         }
         return other;
@@ -212,8 +214,8 @@ public:
     }
 
 private:
-    T* data_ = nullptr;
     size_t size_ = 0;
+    T* data_ = nullptr;
     size_t used_ = 0;
     static const uint32_t max_byte = (1UL << 32) - 1; 
     static constexpr size_t MIN_SIZE = 800;
@@ -223,11 +225,11 @@ private:
     void resize_internal(size_t new_size)
     {
         if(new_size <= size_) return;
-        if (size_ > max_byte) size_ = max_byte;
+        if (new_size > max_byte) size_ = max_byte;
         else while(size_ < new_size) {
             size_ *= resize_factor;
         }
-        T *p = new T[size_];
+        T* p = static_cast<T*>(::operator new(sizeof(T) * size_));
         try {
             for(size_t i = 0; i < used_; ++i) {
                 construct(p + i, std::move(data_[i]));
@@ -236,8 +238,7 @@ private:
             delete[] p;
             throw;
         }
-
-        delete[] data_;
+        destroy();
         data_ = p;
     }
 
@@ -246,9 +247,16 @@ private:
         size_t min_elements = (MIN_SIZE + sizeof(T) - 1) / sizeof(T);
         return std::max(requir_sz, min_elements);
     }
+
+    void destroy() noexcept {
+        for (size_t i = 0; i < used_; ++i)
+            data_[i].~T(); // вручную вызываем деструкторы
+        ::operator delete(data_); // освобождаем сырую память
+        data_ = nullptr;
+        used_ = 0;
+        size_ = 0;
+    }
 };
-
-
 
 struct TestObject {
     static int ctor;
@@ -308,17 +316,12 @@ void test_subvector() {
     assert(sub[2] == 4);
 }
 
-
 void test_destruction() {
     TestObject::reset();
-
     {
         Vector<TestObject> v(3);
     }
-
-    assert(TestObject::ctor + 
-           TestObject::copy_ctor + 
-           TestObject::move_ctor == TestObject::dtor);
+    assert(TestObject::ctor == TestObject::dtor);
 }
 
 void test_out_of_range() {
@@ -354,7 +357,6 @@ void test_move_assignment() {
     assert(v2[0] == 100);
 }
 
-
 void test_copy_assignment() {
     Vector<int> v1(2);
     v1[0] = 10;
@@ -366,7 +368,6 @@ void test_copy_assignment() {
     assert(v2[0] == 10);
     assert(v2[1] == 20);
 }
-
 
 void test_move_constructor() {
     TestObject::reset();
@@ -411,6 +412,15 @@ void test_basic_creation() {
 
 int main (void)
 {
-    Vector<float> v;
-
+    test_basic_creation();
+    test_copy_assignment();
+    test_destruction();
+    test_copy_constructor();
+    test_move_constructor();
+    test_move_assignment();
+    test_out_of_range();
+    test_push_and_access();
+    test_resize(); 
+    test_subvector();
+    return 0;
 }
