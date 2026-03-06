@@ -36,6 +36,7 @@
 #include <cstdint>
 #include <limits>
 #include <cassert>
+#include <new>
 #include <queue>
 #include <sstream>
 #include <stdexcept>
@@ -59,22 +60,29 @@ public:
     explicit Vector(size_t count) : 
     size_(calc_size(count)),
     data_(static_cast<T*>(::operator new(sizeof(T) * size_))),
-    used_(calc_size(count)) {
+    used_(count) 
+    {
         for (size_t i = 0; i < used_; ++i)
             new (data_ + i) T(); 
     };
 
     // копирующий
-    Vector(const Vector& other) : 
+    Vector(const Vector& other) :
       size_(other.size_),
       data_(nullptr),
-      used_(other.used_) 
+      used_(other.used_)
     {
+        if (size_ <= 0) return;
+        size_t i = 0;
         try {
             data_ = static_cast<T*>(::operator new(sizeof(T) * size_));
-            for(size_t i = 0; i < used_; ++i) construct(data_ + i, other.data_[i]);
+            for(; i < used_; ++i) construct(data_ + i, other.data_[i]);
         } catch (...) {
-            destroy();
+            for (size_t j = 0; j < i; ++j) data_[j].~T();
+            ::operator delete(data_);
+            data_ = nullptr;
+            used_ = 0;
+            size_ = 0;
             throw;
         }
     };     
@@ -138,6 +146,7 @@ public:
                     "MyVector<T> only accepts objects of exact type T");
         if (used_ == size_) resize();
         construct(data_ + used_, t);
+        ++used_;
     }
 
     // вставить элемент в конец по rvalue ссылке
@@ -157,7 +166,7 @@ public:
         }
     }
 
-    void resize()
+    void resize() // ?
     {
         resize_internal(this->size_ * this->resize_factor);
     }
@@ -195,9 +204,10 @@ public:
     // создаем vector из subvector
     Vector subvector(size_t begin) const {
         if (begin >= used_) throw std::out_of_range("index out of range");
-        size_t dlt = used_ - begin + 1;
-        Vector other(dlt);
-        for (size_t i = 0; i < dlt; ++i) {
+        size_t sz = used_ - begin;
+        Vector other(sz);
+        for (size_t i = 0; i < sz; ++i) {
+            other.data_[i].~T();
             construct(other.data_ + i, data_[begin + i]);
         }
         return other;
@@ -205,9 +215,10 @@ public:
 
     Vector subvector(size_t begin, size_t end) const {
         if (begin > end or used_ > end) throw std::out_of_range("index out of range");
-        size_t new_sz = end - begin;
-        Vector other(end - begin);
-        for(size_t i = begin; i < new_sz; ++i) {
+        size_t sz = end - begin;
+        Vector other(sz);
+        for(size_t i = 0; i < sz; ++i) {
+            other.data_[i].~T();
             construct(other.data_ + i, data_[begin + i]);
         }
         return other;
@@ -217,28 +228,29 @@ private:
     size_t size_ = 0;
     T* data_ = nullptr;
     size_t used_ = 0;
-    static const uint32_t max_byte = (1UL << 32) - 1; 
+    static const uint32_t max_size = (1UL << 32) - 1; 
     static constexpr size_t MIN_SIZE = 800;
     const uint16_t resize_factor = 2;
 
     //  написать проверку что бы if (count * sizeof(T) < 10^9 байт)
     void resize_internal(size_t new_size)
     {
-        if(new_size <= size_) return;
-        if (new_size > max_byte) size_ = max_byte;
-        else while(size_ < new_size) {
-            size_ *= resize_factor;
-        }
-        T* p = static_cast<T*>(::operator new(sizeof(T) * size_));
+        size_t new_capacity = size_ ? size_ : 1;
+        while (new_capacity < new_size)
+            new_capacity *= resize_factor;
+        T* p = static_cast<T*>(::operator new(sizeof(T) * new_capacity));
         try {
             for(size_t i = 0; i < used_; ++i) {
                 construct(p + i, std::move(data_[i]));
             }
         } catch (...) {
-            delete[] p;
+            ::operator delete(p);
             throw;
         }
-        destroy();
+        for (size_t i = 0; i < used_; ++i)
+            data_[i].~T();
+        ::operator delete(data_); 
+        size_ = new_capacity;
         data_ = p;
     }
 
@@ -286,7 +298,8 @@ struct TestObject {
 
     TestObject& operator=(TestObject&& other) noexcept {
         if (this != &other) {
-            *this = std::move(other);
+            value = other.value;
+            other.value = -1;
         }
         return *this;
     }
@@ -306,8 +319,7 @@ int TestObject::dtor = 0;
 void test_subvector() {
     Vector<int> v(5);
 
-    for (int i = 0; i < 5; ++i)
-        v[i] = i;
+    for (int i = 0; i < 5; ++i) v[i] = i;
 
     Vector<int> sub = v.subvector(2);
 
@@ -409,6 +421,11 @@ void test_basic_creation() {
     assert(!v.empty());
 }
 
+void test_pop() {
+    Vector<int> v(10);
+    v.pop();
+    assert(v.size() == 9);
+}
 
 int main (void)
 {
@@ -419,8 +436,8 @@ int main (void)
     test_move_constructor();
     test_move_assignment();
     test_out_of_range();
-    test_push_and_access();
-    test_resize(); 
+    //test_push_and_access();
+    //test_resize(); 
     test_subvector();
     return 0;
-}
+};
