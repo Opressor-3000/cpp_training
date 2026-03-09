@@ -53,17 +53,25 @@ void construct(T *p, T &&other) { new (p) T(std::move(other)); }
 
 template <typename T>
 class Vector {
-public:
-    Vector() {};        
+public:       
 
     // создать count элементов
     explicit Vector(size_t count) : 
-    size_(calc_size(count)),
+    size_(count),
     data_(static_cast<T*>(::operator new(sizeof(T) * size_))),
-    used_(count) 
+    used_(0) 
     {
-        for (size_t i = 0; i < used_; ++i)
-            new (data_ + i) T(); 
+        try {
+            for (size_t i = 0; i < count; ++i) {
+                construct(data_ + i, T());
+                ++used_;
+            }
+        } catch (...) {
+            for (size_t i = 0; i < used_; ++i)
+                (data_ + i)->~T();
+            ::operator delete(data_);
+            throw;
+        }
     };
 
     // копирующий
@@ -140,6 +148,19 @@ public:
 
     size_t size() const noexcept { return used_;};   
 
+    template <typename U>
+    void push(U&& t) {
+        static_assert(std::is_same<std::decay_t<decltype(t)>, T>::value,
+                    "MyVector<T> only accepts objects of exact type T");
+        static_assert(std::is_nothrow_move_constructible<T>::value,
+                    "The type has a non-throwing move constructor.");
+        static_assert(std::is_nothrow_move_assignable<T>::value,
+                    "The type has a non-throwing move assignment operator.");
+        if (used_ == size_) resize();
+        construct(data_ + used_, std::forward<U>(t));
+        ++used_;
+    }
+    /*
     // вставить элемент в конец по lvalue ссылке
     void push(const T& t) {
         static_assert(std::is_same<std::decay_t<decltype(t)>, T>::value,
@@ -165,7 +186,7 @@ public:
             throw;
         }
     }
-
+    */
     void resize() // ?
     {
         resize_internal(this->size_ * this->resize_factor);
@@ -228,22 +249,32 @@ private:
     size_t size_ = 0;
     T* data_ = nullptr;
     size_t used_ = 0;
-    static const uint32_t max_size = (1UL << 32) - 1; 
+    static constexpr uint32_t MAX_SIZE = (1UL << 32) - 1; 
     static constexpr size_t MIN_SIZE = 800;
     const uint16_t resize_factor = 2;
 
-    //  написать проверку что бы if (count * sizeof(T) < 10^9 байт)
+    //  написать проверку что бы if ((count * sizeof(T)) < 10^9 байт)
     void resize_internal(size_t new_size)
     {
         size_t new_capacity = size_ ? size_ : 1;
-        while (new_capacity < new_size)
+        while (new_capacity < new_size) {
+            if (new_capacity * sizeof(T) > MAX_SIZE) {
+                new_capacity = (MAX_SIZE + sizeof(T) - 1) / sizeof(T);
+                break;
+                };
             new_capacity *= resize_factor;
+        }
         T* p = static_cast<T*>(::operator new(sizeof(T) * new_capacity));
+        size_t i = 0;
         try {
-            for(size_t i = 0; i < used_; ++i) {
+            for(; i < used_; ++i) {
                 construct(p + i, std::move(data_[i]));
             }
         } catch (...) {
+            while (i > 0) {
+                --i;
+                (p + i)->~T();  
+            };
             ::operator delete(p);
             throw;
         }
@@ -252,7 +283,7 @@ private:
         ::operator delete(data_); 
         size_ = new_capacity;
         data_ = p;
-    }
+    };
 
     static size_t calc_size(size_t requir_sz) {
         if (sizeof(T) == 0) return 0;
@@ -354,7 +385,7 @@ void test_resize() {
 
     v.push(1);
     v.push(2);
-    v.push(3); // должен вызвать resize
+    v.push(3);
 
     assert(v[2] == 3);
 }
@@ -428,16 +459,15 @@ void test_pop() {
 }
 
 int main (void)
-{
+{   test_push_and_access();
     test_basic_creation();
+    test_resize(); 
     test_copy_assignment();
     test_destruction();
     test_copy_constructor();
     test_move_constructor();
     test_move_assignment();
     test_out_of_range();
-    //test_push_and_access();
-    //test_resize(); 
     test_subvector();
     return 0;
 };
